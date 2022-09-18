@@ -1,5 +1,5 @@
 {
-  "name": "prisma-aws-lambda-example",
+  "name": "prisma-aws-lambda-example-free",
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
