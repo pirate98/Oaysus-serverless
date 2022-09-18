@@ -1,6 +1,4 @@
-# package directories
-node_modules
-jspm_packages
-
-# Serverless directories
-.serverless
+.serverless/
+node_modules/
+*.env
+*.env.prod
