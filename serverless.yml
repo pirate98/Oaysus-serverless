@@ -1,6 +1,10 @@
-service: prisma-aws-lambda-example
+service: prisma-aws-lambda-free
 plugins:
   - serverless-dotenv-plugin
+  - serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 3010
 
 provider:
   name: aws

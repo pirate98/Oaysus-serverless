@@ -3,16 +3,20 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "prisma:introspect": "prisma introspect",
-    "prisma:generate": "prisma generate",
-    "deploy": "yarn prisma generate && dotenv -e .env.prod serverless deploy --verbose",
-    "deploy:fast": "yarn prisma generate && dotenv -e .env.prod serverless deploy"
+    "prisma:introspect": "yarn prisma introspect",
+    "prisma:generate": "yarn prisma generate",
+    "offline": "serverless offline",
+    "offline:dev": "dotenv -e .env.prod serverless offline",
+    "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
+    "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy"
   },
   "dependencies": {
-    "@prisma/client": "4.3.1"
+    "@prisma/client": "4.3.1",
+    "global": "^4.4.0"
   },
   "devDependencies": {
     "prisma": "4.3.1",
-    "serverless-dotenv-plugin": "4.0.2"
+    "serverless-dotenv-plugin": "4.0.2",
+    "serverless-offline": "^10.0.2"
   }
 }
