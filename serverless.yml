@@ -1,4 +1,4 @@
-service: prisma-aws-lambda-free
+service: oaysus
 plugins:
   - serverless-dotenv-plugin
   - serverless-offline
