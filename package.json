@@ -3,10 +3,11 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
+    "prisma:pull": "yarn prisma db pull",
     "prisma:introspect": "yarn prisma introspect",
     "prisma:generate": "yarn prisma generate",
-    "offline": "serverless offline",
-    "offline:dev": "dotenv -e .env.prod serverless offline",
+    "offline": "yarn prisma:generate && serverless offline --disableCookieValidation",
+    "offline:prod": "dotenv -e .env.prod yarn offline",
     "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
     "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy"
   },

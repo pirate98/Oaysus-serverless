@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.handler = async (event, context, callback) => {
+  console.log({ env: process.env.DATABASE_URL });
   try {
     await Promise.all([prisma.profile.deleteMany(), prisma.post.deleteMany()]);
     await prisma.user.deleteMany();
