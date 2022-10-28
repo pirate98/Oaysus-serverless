@@ -1,10 +1,19 @@
 service: oaysus
 plugins:
   - serverless-dotenv-plugin
+  - serverless-ngrok-tunnel
   - serverless-offline
+
 custom:
   serverless-offline:
     httpPort: 3010
+  ngrokTunnel:
+    envPath: ".env" # optional. Path to your .env file, relative to serverless.yml file
+    tunnels:
+      - port: 3010 # required
+        envProp: "API_GATEWAY" # optional. property in .env file to assign url value to
+
+useDotenv: true
 
 provider:
   name: aws
@@ -14,6 +23,12 @@ provider:
   deploymentMethod: direct
 
 functions:
+  auth:
+    handler: handlers/auth.handler
+    events:
+      - http:
+          method: GET
+          path: /auth/callback
   status:
     handler: handlers/status.handler
     events:

@@ -1,5 +1,8 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -8,20 +11,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int      @id @default(autoincrement())
-  name        String?  @db.VarChar(255)
-  email       String   @unique @db.VarChar(255)
-  accessToken String?
+model StoreSession {
+  id      String      @id
+  shop    String
+  payload Json
+  // It might be necessary to add a relation with Shop table here
+  
+  @@map("store_session")
+}
+
+model Shop {
+  // id          Int           @id @default(autoincrement())
+  id          String         @id @db.VarChar(255)
+  email       String         @unique @db.VarChar(255)
   upsells     Upsell[]
   billings    Billing[]
-  profile     Profile?
 }
 
 model Upsell {
-  id          Int      @id @default(autoincrement())
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId      Int
+  id          Int            @id @default(autoincrement())
+  Shop        Shop           @relation(fields: [shopId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shopId      String
   status      Boolean
   views       Int
   conversion  Int
@@ -31,10 +41,21 @@ model Upsell {
 }
 
 model Billing {
-  id          Int      @id @default(autoincrement())
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId      Int
+  id          Int          @id @default(autoincrement())
+  Shop        Shop         @relation(fields: [shopId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shopId      String
 }
+
+// model User {
+//   id          Int      @id @default(autoincrement())
+//   name        String?  @db.VarChar(255)
+//   email       String   @unique @db.VarChar(255)
+//   accessToken String?
+//   upsells     Upsell[]
+//   billings    Billing[]
+//   profile     Profile?
+// }
+
 
 // model Post {
 //   id        Int      @id @default(autoincrement())
@@ -45,10 +66,3 @@ model Billing {
 //   authorId  Int
 //   User      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 // }
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  User   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}

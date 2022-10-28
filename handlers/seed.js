@@ -4,22 +4,19 @@ const prisma = new PrismaClient();
 exports.handler = async (event, context, callback) => {
   console.log({ env: process.env.DATABASE_URL });
   try {
-    await Promise.all([prisma.profile.deleteMany(), prisma.post.deleteMany()]);
-    await prisma.user.deleteMany();
-
-    const createdUser = await prisma.user.create({
-      data: seedUser,
-    });
-
-    const createdUser2 = await prisma.user.create({
-      data: seedUser2,
-    });
-
-    return {
-      statusCode: 201,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([createdUser, createdUser2]),
-    };
+    // await Promise.all([prisma.profile.deleteMany(), prisma.post.deleteMany()]);
+    // await prisma.user.deleteMany();
+    // const createdUser = await prisma.user.create({
+    //   data: seedUser,
+    // });
+    // const createdUser2 = await prisma.user.create({
+    //   data: seedUser2,
+    // });
+    // return {
+    //   statusCode: 201,
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify([createdUser, createdUser2]),
+    // };
   } catch (error) {
     console.error(error);
     return { statusCode: 500 };

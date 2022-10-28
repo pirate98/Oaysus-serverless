@@ -2,22 +2,31 @@
   "name": "prisma-aws-lambda-example-free",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
     "prisma:pull": "yarn prisma db pull",
     "prisma:introspect": "yarn prisma introspect",
+    "prisma:migrate": "yarn prisma migrate dev",
     "prisma:generate": "yarn prisma generate",
-    "offline": "yarn prisma:generate && serverless offline --disableCookieValidation",
+    "offline": "yarn prisma:generate && serverless offline start --disableCookieValidation",
     "offline:prod": "dotenv -e .env.prod yarn offline",
     "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
-    "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy"
+    "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy",
+    "ngrok": "dotenv node ./services/ngrok.js",
+    "start:win": "start.bat && yarn ngrok",
+    "start": "yarn offline --param=\"tunnel=true\""
   },
   "dependencies": {
-    "@prisma/client": "4.3.1",
-    "global": "^4.4.0"
+    "@prisma/client": "^4.5.0",
+    "@shopify/shopify-api": "^5.2.0",
+    "cookie-signature": "^1.2.0",
+    "dotenv": "^16.0.3",
+    "envfile": "^6.18.0",
+    "global": "^4.4.0",
+    "ngrok": "^4.3.3"
   },
   "devDependencies": {
-    "prisma": "4.3.1",
+    "prisma": "^4.5.0",
     "serverless-dotenv-plugin": "4.0.2",
+    "serverless-ngrok-tunnel": "^0.2.0",
     "serverless-offline": "^10.0.2"
   }
 }
