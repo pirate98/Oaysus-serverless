@@ -1,8 +1,12 @@
 const { Shopify } = require("@shopify/shopify-api");
+const axios = require("axios");
+
 const { makeShopifyUrl, getApiGateway, redirectToAuth } = require("../helpers");
 const { AppInstallations } = require("../services/shopify");
 
 exports.handler = async (event, context, callback) => {
+  const isProd = process.env.NODE_ENV === "production";
+
   // console.log({ context });
   console.log({ env: process.env.DATABASE_URL });
   const { queryStringParameters, requestContext } = event;
@@ -10,58 +14,35 @@ exports.handler = async (event, context, callback) => {
   // console.log({ event, context, callback });
 
   if (typeof queryStringParameters?.shop !== "string") {
-    const ngrok = makeShopifyUrl(getApiGateway());
-    console.log(ngrok);
+    const ngrokUrl = getApiGateway();
+    const ngrokShopUrl = makeShopifyUrl(ngrokUrl);
+    console.log(ngrokUrl);
+
+    /**
+     * App is running first time. Register ngrok url to url redirector.
+     * Redirect to ngrok shop url
+     */
+
+    axios.get(process.env.AWS_REDIRECT_URL + `?redirectUrl=${ngrokUrl}`);
 
     return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messsage: "No shop provided",
-        ngrok,
-      }),
+      statusCode: 302,
+      headers: { Location: ngrokShopUrl },
     };
   }
 
   const shop = Shopify.Utils.sanitizeShop(queryStringParameters.shop);
   const appInstalled = await AppInstallations.includes(shop);
   console.log({ appInstalled });
+  // console.log({ event })
 
   if (!appInstalled && !requestContext?.resourcePath?.match(/^\/exitiframe/i)) {
+    console.log("iframe checking");
     return redirectToAuth(event, context);
   }
-
+  console.log("redirecting to:", process.env.FRONTEND_URL);
   return {
-    statusCode: 200,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ up: true }),
+    statusCode: 302,
+    headers: { Location: process.env.FRONTEND_URL },
   };
-
-  if (typeof req.query.shop !== "string") {
-    res.status(500);
-    return res.send("No shop provided");
-  }
-  console.log(req.query);
-  // const shop = Shopify.Utils.sanitizeShop(req.query.shop);
-  // const appInstalled = await AppInstallations.includes(shop);
-  console.log({ shop, appInstalled });
-  if (!appInstalled && !req.originalUrl.match(/^\/exitiframe/i)) {
-    return redirectToAuth(req, res, app);
-  }
-
-  if (Shopify.Context.IS_EMBEDDED_APP && req.query.embedded !== "1") {
-    const embeddedUrl = Shopify.Utils.getEmbeddedAppUrl(req);
-    console.log("app installed", embeddedUrl + req.path);
-    return res.redirect(embeddedUrl + req.path);
-  }
-
-  const htmlFile = join(
-    isProd ? PROD_INDEX_PATH : DEV_INDEX_PATH,
-    "index.html"
-  );
-  console.log("responding with html");
-  return res
-    .status(200)
-    .set("Content-Type", "text/html")
-    .send(readFileSync(htmlFile));
 };

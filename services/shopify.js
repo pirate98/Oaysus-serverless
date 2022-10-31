@@ -36,6 +36,7 @@ Shopify.Context.initialize({
 
 module.exports.AppInstallations = {
   includes: async function (shopDomain) {
+    console.log({ CONTEXT: Shopify.Context });
     const shopSessions =
       await Shopify.Context.SESSION_STORAGE.findSessionsByShop(shopDomain);
 

@@ -1,5 +1,5 @@
 module.exports.makeShopifyUrl = (str) => {
-  const shop = "oaysus-dev.myshopify.com";
+  const shop = process.env.SHOPIFY_SHOP;
   const host = process.env.SHOPIFY_HOST;
   const isProduction = process.env.NODE_ENV === "production";
 

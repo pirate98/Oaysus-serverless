@@ -23,42 +23,42 @@ provider:
   deploymentMethod: direct
 
 functions:
-  auth:
-    handler: handlers/auth.handler
-    events:
-      - http:
-          method: GET
-          path: /auth/callback
   status:
     handler: handlers/status.handler
     events:
       - http:
           method: GET
           path: /
-  seed:
-    handler: handlers/seed.handler
+  auth:
+    handler: handlers/auth.handler
     events:
       - http:
           method: GET
-          path: /seed
-  getUsers:
-    handler: handlers/users.handler
-    events:
-      - http:
-          method: GET
-          path: /users
-  createUser:
-    handler: handlers/create-user.handler
-    events:
-      - http:
-          method: POST
-          path: /users
-  getPosts:
-    handler: handlers/posts.handler
-    events:
-      - http:
-          method: GET
-          path: /posts
+          path: /auth/callback
+  # seed:
+  #   handler: handlers/seed.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /seed
+  # getUsers:
+  #   handler: handlers/users.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /users
+  # createUser:
+  #   handler: handlers/create-user.handler
+  #   events:
+  #     - http:
+  #         method: POST
+  #         path: /users
+  # getPosts:
+  #   handler: handlers/posts.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /posts
 
 # only include the Prisma binary required on AWS Lambda while packaging
 package:
