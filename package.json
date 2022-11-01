@@ -6,7 +6,7 @@
     "prisma:introspect": "yarn prisma introspect",
     "prisma:migrate": "yarn prisma migrate dev",
     "prisma:generate": "yarn prisma generate",
-    "offline": "yarn prisma:generate && serverless offline start --disableCookieValidation",
+    "offline": "yarn prisma:generate && serverless offline start",
     "offline:prod": "dotenv -e .env.prod yarn offline",
     "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
     "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy",

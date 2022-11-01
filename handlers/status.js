@@ -1,8 +1,7 @@
-const { Shopify } = require("@shopify/shopify-api");
 const axios = require("axios");
 
 const { makeShopifyUrl, getApiGateway, redirectToAuth } = require("../helpers");
-const { AppInstallations } = require("../services/shopify");
+const { AppInstallations, Shopify } = require("../services/shopify");
 
 exports.handler = async (event, context, callback) => {
   const isProd = process.env.NODE_ENV === "production";
@@ -12,8 +11,9 @@ exports.handler = async (event, context, callback) => {
   const { queryStringParameters, requestContext } = event;
   console.log({ queryStringParameters });
   // console.log({ event, context, callback });
+  const { embedded, shop } = queryStringParameters || {};
 
-  if (typeof queryStringParameters?.shop !== "string") {
+  if (typeof shop !== "string") {
     const ngrokUrl = getApiGateway();
     const ngrokShopUrl = makeShopifyUrl(ngrokUrl);
     console.log(ngrokUrl);
@@ -31,8 +31,8 @@ exports.handler = async (event, context, callback) => {
     };
   }
 
-  const shop = Shopify.Utils.sanitizeShop(queryStringParameters.shop);
-  const appInstalled = await AppInstallations.includes(shop);
+  const _shop = Shopify.Utils.sanitizeShop(shop);
+  const appInstalled = await AppInstallations.includes(_shop);
   console.log({ appInstalled });
   // console.log({ event })
 
@@ -40,9 +40,16 @@ exports.handler = async (event, context, callback) => {
     console.log("iframe checking");
     return redirectToAuth(event, context);
   }
-  console.log("redirecting to:", process.env.FRONTEND_URL);
-  return {
-    statusCode: 302,
-    headers: { Location: process.env.FRONTEND_URL },
-  };
+
+  if (Shopify.Context.IS_EMBEDDED_APP && embedded !== "1") {
+    const embeddedUrl = `https://${shop}/admin/apps/${Shopify.Context.API_KEY}`;
+    console.log("redirecting to embedded app url:", embeddedUrl);
+    // const embeddedUrl = Shopify.Utils.getEmbeddedAppUrl(req);
+    // https://oaysus-dev.myshopify.com/admin/apps/3e4e24721e43d1025464f022874885f3/
+    // return res.redirect(embeddedUrl + req.path);
+    return {
+      statusCode: 302,
+      headers: { Location: embeddedUrl },
+    };
+  }
 };
