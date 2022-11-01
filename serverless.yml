@@ -10,43 +10,49 @@ provider:
   name: aws
   region: us-east-1
   runtime: nodejs14.x
+  memorySize: 512
   stage: dev
   deploymentMethod: direct
 
 functions:
-  status:
-    handler: handlers/status.handler
+  getupsell:
+    handler: handlers/fetchUpsell.handler
     events:
       - http:
           method: GET
-          path: /
-  seed:
-    handler: handlers/seed.handler
-    events:
-      - http:
-          method: GET
-          path: /seed
-  getUsers:
-    handler: handlers/users.handler
-    events:
-      - http:
-          method: GET
-          path: /users
-  createUser:
-    handler: handlers/create-user.handler
+          path: /upsell
+
+  createupsell:
+    handler: handlers/createUpsell.handler
     events:
       - http:
           method: POST
-          path: /users
-  getPosts:
-    handler: handlers/posts.handler
+          path: /createUpsell      
+
+  deleteupsell:
+    handler: handlers/deleteUpsell.handler
     events:
       - http:
-          method: GET
-          path: /posts
+          method: POST
+          path: /deleteUpsell  
+
+  deletesingleupsell:
+    handler: handlers/deletesingleUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /deletesingleUpsell    
+
+  updateupsell:
+    handler: handlers/updateUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /updateUpsell                          
 
 # only include the Prisma binary required on AWS Lambda while packaging
 package:
+  individually: true
   patterns:
     - "!node_modules/.prisma/client/libquery_engine-*"
     - "node_modules/.prisma/client/libquery_engine-rhel-*"

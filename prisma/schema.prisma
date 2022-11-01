@@ -13,14 +13,14 @@ model User {
   name        String?  @db.VarChar(255)
   email       String   @unique @db.VarChar(255)
   accessToken String?
-  upsells     Upsell[]
+  // upsells     Upsell[]
   billings    Billing[]
   profile     Profile?
 }
 
 model Upsell {
   id          Int      @id @default(autoincrement())
-  User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // User        User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction
   userId      Int
   status      Boolean
   views       Int

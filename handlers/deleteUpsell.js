@@ -1,16 +1,17 @@
-const { PrismaClient } = require('@prisma/client')
+
+  const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
 exports.handler = async (event, context, callback) => {
   try {
-    const posts = await prisma.post.findMany({
+    const deleteUsers = await prisma.upsell.deleteMany({})({
       include: { author: true }
     })
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(posts)
+      body: JSON.stringify(deleteUsers)
     }
   } catch (error) {
     console.error(error)
