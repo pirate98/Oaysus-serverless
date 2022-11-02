@@ -1,20 +1,33 @@
 {
-  "name": "oaysus-serverless",
-  "version": "1.0.0",
-  "description": "<!-- title: 'AWS NodeJS Example' description: 'This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS priority: 1 authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
-  "main": "handler.js",
+  "name": "prisma-aws-lambda-example-free",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prisma:pull": "yarn prisma db pull",
+    "prisma:introspect": "yarn prisma introspect",
+    "prisma:migrate": "yarn prisma migrate dev",
+    "prisma:generate": "yarn prisma generate",
+    "offline": "yarn prisma:generate && serverless offline start",
+    "offline:prod": "dotenv -e .env.prod yarn offline",
+    "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
+    "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy",
+    "ngrok": "dotenv node ./services/ngrok.js",
+    "start:win": "start.bat && yarn ngrok",
+    "start": "yarn offline --param=\"tunnel=true\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://oaysus-admin@bitbucket.org/oaysus/oaysus-serverless.git"
+  "dependencies": {
+    "@prisma/client": "^4.5.0",
+    "@shopify/shopify-api": "^5.2.0",
+    "axios": "^1.1.3",
+    "cookie-signature": "^1.2.0",
+    "dotenv": "^16.0.3",
+    "envfile": "^6.18.0",
+    "global": "^4.4.0",
+    "ngrok": "^4.3.3"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://bitbucket.org/oaysus/oaysus-serverless/issues"
-  },
-  "homepage": "https://bitbucket.org/oaysus/oaysus-serverless#readme"
+  "devDependencies": {
+    "prisma": "^4.5.0",
+    "serverless-dotenv-plugin": "4.0.2",
+    "serverless-ngrok-tunnel": "^0.2.0",
+    "serverless-offline": "^10.0.2"
+  }
 }

@@ -1,13 +1,69 @@
-org: jasonbiondo
-app: oaysus
 service: oaysus
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-ngrok-tunnel
+  - serverless-offline
 
-frameworkVersion: '3'
+custom:
+  serverless-offline:
+    httpPort: 3010
+  ngrokTunnel:
+    envPath: ".env" # optional. Path to your .env file, relative to serverless.yml file
+    tunnels:
+      - port: 3010 # required
+        envProp: "API_GATEWAY" # optional. property in .env file to assign url value to
+
+useDotenv: true
 
 provider:
   name: aws
+  region: us-east-1
   runtime: nodejs14.x
+  stage: dev
+  deploymentMethod: direct
 
 functions:
-  hello:
-    handler: handler.hello
+  status:
+    handler: handlers/status.handler
+    events:
+      - http:
+          method: GET
+          path: /
+  auth:
+    handler: handlers/auth.handler
+    events:
+      - http:
+          method: GET
+          path: /auth/callback
+  # seed:
+  #   handler: handlers/seed.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /seed
+  # getUsers:
+  #   handler: handlers/users.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /users
+  # createUser:
+  #   handler: handlers/create-user.handler
+  #   events:
+  #     - http:
+  #         method: POST
+  #         path: /users
+  # getPosts:
+  #   handler: handlers/posts.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /posts
+
+# only include the Prisma binary required on AWS Lambda while packaging
+package:
+  patterns:
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/libquery_engine-rhel-*"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"

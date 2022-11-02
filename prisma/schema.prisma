@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model StoreSession {
+  id      String      @id
+  shop    String
+  payload Json
+  // It might be necessary to add a relation with Shop table here
+  
+  @@map("store_session")
+}
+
+model Shop {
+  // id          Int           @id @default(autoincrement())
+  id          String         @id @db.VarChar(255)
+  email       String         @unique @db.VarChar(255)
+  upsells     Upsell[]
+  billings    Billing[]
+}
+
+model Upsell {
+  id          Int            @id @default(autoincrement())
+  Shop        Shop           @relation(fields: [shopId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shopId      String
+  status      Boolean
+  views       Int
+  conversion  Int
+  priority    Int
+  triggers    Json
+  content     Json
+}
+
+model Billing {
+  id          Int          @id @default(autoincrement())
+  Shop        Shop         @relation(fields: [shopId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  shopId      String
+}
+
+// model User {
+//   id          Int      @id @default(autoincrement())
+//   name        String?  @db.VarChar(255)
+//   email       String   @unique @db.VarChar(255)
+//   accessToken String?
+//   upsells     Upsell[]
+//   billings    Billing[]
+//   profile     Profile?
+// }
+
+
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   title     String   @db.VarChar(255)
+//   createdAt DateTime @default(now()) @db.Timestamp(6)
+//   content   String?
+//   published Boolean  @default(false)
+//   authorId  Int
+//   User      User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
