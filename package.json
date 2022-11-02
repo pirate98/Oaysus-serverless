@@ -4,7 +4,11 @@
   "scripts": {
     "prisma:pull": "yarn prisma db pull",
     "prisma:introspect": "yarn prisma introspect",
-    "prisma:migrate": "yarn prisma migrate dev",
+    "prisma:diff": "yarn prisma migrate diff --from-url \"postgresql://oaysus:dym8fqx7wxk*ntw3XTY@oaysus.c9jrslambwvl.us-east-1.rds.amazonaws.com/oaysusDev\" --to-schema-datamodel ./prisma/schema.prisma --script > forward.sql",
+    "prisma:execute": "yarn prisma db execute --url postgresql://oaysus:dym8fqx7wxk*ntw3XTY@oaysus.c9jrslambwvl.us-east-1.rds.amazonaws.com/oaysusDev --file forward.sql",
+    "prisma:resolve": "dotenv -e .env.prod -- yarn prisma migrate resolve --applied",
+    "prisma:migrate": "dotenv -e .env.prod -- yarn prisma migrate deploy",
+    "prisma:migrate:dev": "yarn prisma migrate dev",
     "prisma:generate": "yarn prisma generate",
     "offline": "yarn prisma:generate && serverless offline start",
     "offline:prod": "dotenv -e .env.prod yarn offline",
