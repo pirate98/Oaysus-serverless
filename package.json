@@ -11,12 +11,12 @@
     "prisma:migrate:dev": "yarn prisma migrate dev",
     "prisma:generate": "yarn prisma generate",
     "offline": "yarn prisma:generate && serverless offline start",
-    "offline:prod": "dotenv -e .env.prod yarn offline",
+    "offline:prod": "dotenv -e .env.prod -- yarn offline",
     "deploy": "yarn prisma:generate && dotenv -e .env.prod serverless deploy --verbose",
     "deploy:fast": "yarn prisma:generate && dotenv -e .env.prod serverless deploy",
     "ngrok": "dotenv node ./services/ngrok.js",
     "start:win": "start.bat && yarn ngrok",
-    "start": "yarn offline --param=\"tunnel=true\""
+    "dev": "yarn offline --param=\"tunnel=true\""
   },
   "dependencies": {
     "@prisma/client": "^4.5.0",
