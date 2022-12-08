@@ -1,13 +1,60 @@
-org: jasonbiondo
-app: oaysus
 service: oaysus
-
-frameworkVersion: '3'
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 3010
 
 provider:
   name: aws
+  region: us-east-1
   runtime: nodejs14.x
+  memorySize: 512
+  stage: dev
+  deploymentMethod: direct
 
 functions:
-  hello:
-    handler: handler.hello
+  getupsell:
+    handler: handlers/fetchUpsell.handler
+    events:
+      - http:
+          method: GET
+          path: /upsell
+
+  createupsell:
+    handler: handlers/createUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /createUpsell      
+
+  deleteupsell:
+    handler: handlers/deleteUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /deleteUpsell  
+
+  deletesingleupsell:
+    handler: handlers/deletesingleUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /deletesingleUpsell    
+
+  updateupsell:
+    handler: handlers/updateUpsell.handler
+    events:
+      - http:
+          method: POST
+          path: /updateUpsell                          
+
+# only include the Prisma binary required on AWS Lambda while packaging
+package:
+  individually: true
+  patterns:
+    - "!node_modules/.prisma/client/libquery_engine-*"
+    - "node_modules/.prisma/client/libquery_engine-rhel-*"
+    - "!node_modules/prisma/libquery_engine-*"
+    - "!node_modules/@prisma/engines/**"
